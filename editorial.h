@@ -28,5 +28,31 @@ class Pila
         void desapilar();
         int mostrar();
 };
-
+class NodoCola
+{
+    friend class Cola;
+private:
+    NodoCola *siguiente;
+    char elemento;
+public:
+    NodoCola();
+    NodoCola(char e, NodoCola*sig = NULL);
+    ~NodoCola();
+};
+class Cola
+{
+private:
+    NodoCola * primero;
+        NodoCola * ultimo;
+        int longitud;
+public:
+    Cola(); ~Cola();
+    void encolar(char);
+    char inicio();
+    char fin();
+    char desencolar();
+    bool es_vacia();
+    void mostrarCola();
+    int get_longitud();
+};
 #endif
