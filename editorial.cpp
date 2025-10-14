@@ -3,11 +3,11 @@
 using namespace std;
 NodoPila::NodoPila()
 {
-    valor=0;
+    valor="";
     siguiente=NULL;
 //ctor
 }
-NodoPila::NodoPila(int v, NodoPila *sig)
+NodoPila::NodoPila(string v, NodoPila *sig)
 {
     valor = v;
     siguiente = sig;
@@ -17,17 +17,15 @@ NodoPila::~NodoPila()
 //dtor
 }
 Pila::Pila()
-{cima = NULL;}
+    {cima = nullptr;}
 Pila::~Pila()
-{ while(cima) desapilar();}
+    { while(cima) desapilar();}
 
 bool Pila::esVacia()
-{ return cima == NULL; }
+{ return cima == nullptr; }
 
-void Pila::apilar(int v)
-{ pnodo nuevo = new NodoPila(v,
-cima);
-//comienzo de la pila nevo nodo
+void Pila::apilar(string v) {
+    pnodo nuevo = new NodoPila(v, cima);
     cima = nuevo;
 }
 void Pila::desapilar() {
@@ -41,10 +39,10 @@ void Pila::desapilar() {
 }
 int Pila::mostrar()
 {   if(esVacia()) {
-        cout << "Pila vacia"<<endl;
+        cout << "No hay pedidos actualmente"<<endl;
         }
     else{
-        cout << "Cima pila: "<< cima->valor<<endl;
+        cout << "Id_pedido: "<< cima->valor<<endl;
         }
         return 0;
 }

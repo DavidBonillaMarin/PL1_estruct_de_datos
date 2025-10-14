@@ -1,20 +1,24 @@
 #ifndef EDITORIAL_H
 #define EDITORIAL_H
 #include <iostream>
+#include <string>
+using namespace std;
+
 
 class NodoPila
 {
-    private:
-        int valor;
-        NodoPila *siguiente;
-        friend class Pila;
-    public:
-        NodoPila();
-        NodoPila(int v, NodoPila *sig = NULL);
-        ~NodoPila();
-};
-typedef NodoPila *pnodo;
+private:
+    string valor;
+    NodoPila *siguiente;
+    friend class Pila;
 
+public:
+    NodoPila();
+    NodoPila(string v, NodoPila *sig = nullptr);
+    ~NodoPila();
+};
+
+typedef NodoPila *pnodo;
 
 class Pila
 {
@@ -24,7 +28,7 @@ class Pila
         Pila();
         ~Pila();
         bool esVacia();
-        void apilar(int v);
+        void apilar(string v);
         void desapilar();
         int mostrar();
 };

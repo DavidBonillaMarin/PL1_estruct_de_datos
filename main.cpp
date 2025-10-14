@@ -3,7 +3,10 @@
 using namespace std;
 int main()
 {
-    cout << "Creamos la pila Vacía" << endl;
+    Pila caja; caja.mostrar();
+    cout << "Nuevo pedido añadido" <<endl;
+    caja.apilar("P0000"); caja.mostrar();
+    /*cout << "Creamos la pila Vacía" << endl;
     Pila p; p.mostrar();
     cout << "Apilo 0" << endl;
     p.apilar(0); p.mostrar();
@@ -31,5 +34,6 @@ int main()
     c.desencolar(); c.mostrarCola();
     cout << "Longitud Cola: " << c.get_longitud()<<endl;
     c.~Cola();
+*/
     return 0;
 }
