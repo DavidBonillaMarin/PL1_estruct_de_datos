@@ -1,5 +1,5 @@
-#include EDITORIAL.H
-#define EDITORIAL.H
+#ifndef EDITORIAL_H
+#define EDITORIAL_H
 #include <iostream>
 
 class NodoPila

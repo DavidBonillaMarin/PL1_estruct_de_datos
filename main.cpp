@@ -1,6 +1,5 @@
 #include <iostream>
 #include "editorial.h"
-#include "editorial.cpp"
 using namespace std;
 int main()
 {

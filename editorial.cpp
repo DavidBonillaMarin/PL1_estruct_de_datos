@@ -1,6 +1,6 @@
 //encolar,desencolar,apilar y desapilar
 #include "editorial.h"
-
+using namespace std;
 NodoPila::NodoPila()
 {
     valor=0;
@@ -18,7 +18,6 @@ NodoPila::~NodoPila()
 }
 Pila::Pila()
 {cima = NULL;}
-
 Pila::~Pila()
 { while(cima) desapilar();}
 
@@ -26,23 +25,27 @@ bool Pila::esVacia()
 { return cima == NULL; }
 
 void Pila::apilar(int v)
-{ pnodo nuevo = new NodoPila(v, cima);
+{ pnodo nuevo = new NodoPila(v,
+cima);
 //comienzo de la pila nevo nodo
     cima = nuevo;
 }
-void Pila::desapilar()
-{ pnodo nodo; //puntero aux para manipular el nodo
-    if(cima)
-        nodo = cima;
+void Pila::desapilar() {
+    if (cima) {
+        pnodo nodo = cima;
         cima = nodo->siguiente;
-    delete nodo;
+        delete nodo;
+    } else {
+        cout << "La pila está vacía.\n";
+    }
 }
 int Pila::mostrar()
 {   if(esVacia()) {
         cout << "Pila vacia"<<endl;
-}
+        }
     else{
         cout << "Cima pila: "<< cima->valor<<endl;
-}
+        }
         return 0;
 }
+
