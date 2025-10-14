@@ -29,9 +29,12 @@ class Pila
         ~Pila();
         bool esVacia();
         void apilar(string v);
+        void apilar();
         void desapilar();
         int mostrar();
+
 };
+
 class NodoCola
 {
     friend class Cola;
@@ -59,4 +62,5 @@ public:
     void mostrarCola();
     int get_longitud();
 };
+string generarCodigo();
 #endif

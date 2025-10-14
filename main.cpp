@@ -3,9 +3,13 @@
 using namespace std;
 int main()
 {
-    Pila caja; caja.mostrar();
-    cout << "Nuevo pedido añadido" <<endl;
-    caja.apilar("P0000"); caja.mostrar();
+    srand(time(nullptr));
+    Pila caja;
+
+    for (int i = 0; i <31; i++){
+        string codigo = generarCodigo();
+        caja.apilar(codigo);
+        caja.mostrar();}
     /*cout << "Creamos la pila Vacía" << endl;
     Pila p; p.mostrar();
     cout << "Apilo 0" << endl;

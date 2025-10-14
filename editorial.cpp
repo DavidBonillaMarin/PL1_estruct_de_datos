@@ -1,5 +1,9 @@
 //encolar,desencolar,apilar y desapilar
 #include "editorial.h"
+#include <cstdlib>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 using namespace std;
 NodoPila::NodoPila()
 {
@@ -24,6 +28,11 @@ Pila::~Pila()
 bool Pila::esVacia()
 { return cima == nullptr; }
 
+void Pila::apilar() {
+    string codigo = generarCodigo();
+    pnodo nuevo = new NodoPila(codigo, cima);
+    cima = nuevo;
+}
 void Pila::apilar(string v) {
     pnodo nuevo = new NodoPila(v, cima);
     cima = nuevo;
@@ -150,5 +159,16 @@ void Cola::mostrarCola()
             aux = aux->siguiente;
         }
     }
+}
+
+string generarCodigo() {
+    // Generar número aleatorio de 0 a 99999
+    int numero = rand() % 100000;
+
+    // Convertir a string con ceros a la izquierda
+    stringstream ss;
+    ss << "P" << setw(5) << setfill('0') << numero;
+
+    return ss.str();
 }
 
