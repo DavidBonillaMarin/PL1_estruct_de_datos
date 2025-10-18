@@ -46,15 +46,37 @@ void Pila::desapilar() {
         cout << "La pila está vacía.\n";
     }
 }
-int Pila::mostrar()
-{   if(esVacia()) {
-        cout << "No hay pedidos actualmente"<<endl;
+int Pila::mostrar() {
+    if (esVacia()) {
+        cout << "No hay pedidos actualmente." << endl;
+    } else {
+
+        cout << left << setw(15) << "id_editorial"
+             << "| " << setw(15) << "id_pedido"
+             << "| " << setw(10) << "codigo" << endl;
+        cout << string(80, '-') << endl;
+
+        pnodo actual = cima;
+        while (actual) {
+            string valor = actual->valor;
+
+            size_t pos1 = valor.find('|');
+            size_t pos2 = valor.find('|', pos1 + 1);
+
+            string id_editorial = valor.substr(0, pos1);
+            string id_pedido = valor.substr(pos1 + 1, pos2 - pos1 - 1);
+            string codigo = valor.substr(pos2 + 1);
+
+            cout << left << setw(15) << id_editorial
+                 << "| " << setw(15) << id_pedido
+                 << "| " << setw(10) << codigo << endl;
+
+            actual = actual->siguiente;
         }
-    else{
-        cout << "Id_pedido: "<< cima->valor<<endl;
-        }
-        return 0;
+    }
+    return 0;
 }
+
 
 NodoCola::NodoCola()
 {
@@ -162,12 +184,21 @@ void Cola::mostrarCola()
 }
 
 string generarCodigo() {
-    // Generar número aleatorio de 0 a 99999
-    int numero = rand() % 100000;
+    int pedido = rand() % 100000;
 
-    // Convertir a string con ceros a la izquierda
+    int id_editorial = rand() % 10;
+
+    int codigo_1 = rand() % 1000;
+    int codigo_2 = rand() % 100;
+
+    char letra = 'A' + rand() % 26;
+
     stringstream ss;
-    ss << "P" << setw(5) << setfill('0') << numero;
+    ss << id_editorial << "|" << "P" <<
+    setw(5) << setfill('0') << pedido << "|" <<
+    setw(3) << setfill('0') << codigo_1 <<
+    letra <<
+    setw(2) << setfill('0') << codigo_2;
 
     return ss.str();
 }
