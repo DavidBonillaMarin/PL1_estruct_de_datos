@@ -62,5 +62,5 @@ public:
     void mostrarCola();
     int get_longitud();
 };
-string generarCodigo();
+string generarPedidos();
 #endif

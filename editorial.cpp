@@ -29,7 +29,7 @@ bool Pila::esVacia()
 { return cima == nullptr; }
 
 void Pila::apilar() {
-    string codigo = generarCodigo();
+    string codigo = generarPedidos();
     pnodo nuevo = new NodoPila(codigo, cima);
     cima = nuevo;
 }
@@ -50,7 +50,13 @@ int Pila::mostrar() {
     if (esVacia()) {
         cout << "No hay pedidos actualmente." << endl;
     } else {
-
+        cout << left << "--- MENU ---" << endl
+             << "1) Generar N pedidos" << endl
+             << "2) Paso (una fase)" << endl
+             << "3) Mostrar estado" << endl
+             << "4) Paso completo (4 fases)" << endl
+             << "5) Ver el interior de una caja" << endl
+             << "6) Salir" << endl;
         cout << left << setw(15) << "id_editorial"
              << "| " << setw(15) << "id_pedido"
              << "| " << setw(10) << "codigo" << endl;
@@ -183,7 +189,7 @@ void Cola::mostrarCola()
     }
 }
 
-string generarCodigo() {
+string generarPedidos() {
     int pedido = rand() % 100000;
 
     int id_editorial = rand() % 10;
