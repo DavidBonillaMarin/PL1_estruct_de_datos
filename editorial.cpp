@@ -50,13 +50,6 @@ int Pila::mostrar() {
     if (esVacia()) {
         cout << "No hay pedidos actualmente." << endl;
     } else {
-        cout << left << "--- MENU ---" << endl
-             << "1) Generar N pedidos" << endl
-             << "2) Paso (una fase)" << endl
-             << "3) Mostrar estado" << endl
-             << "4) Paso completo (4 fases)" << endl
-             << "5) Ver el interior de una caja" << endl
-             << "6) Salir" << endl;
         cout << left << setw(15) << "id_editorial"
              << "| " << setw(15) << "id_pedido"
              << "| " << setw(10) << "codigo" << endl;
@@ -140,7 +133,7 @@ char Cola::desencolar()
     else
     {
         cout << "Error: la cola está vacía." << endl;
-        return '\0'; // o lanza una excepción si prefieres
+        return '\0';
     }
 }
 char Cola::inicio()
@@ -169,8 +162,6 @@ bool Cola::es_vacia()
     return ((primero == NULL) && (ultimo == NULL));
 }
 
-// No es correcto, la cola solo puede verse mostrando el primero y desencolando,
-// se implementa para comprobar código fácilmente.
 void Cola::mostrarCola()
 {
     NodoCola *aux = primero;
