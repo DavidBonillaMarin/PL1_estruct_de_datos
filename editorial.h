@@ -1,20 +1,66 @@
 #ifndef EDITORIAL_H
 #define EDITORIAL_H
+
 #include <iostream>
 #include <string>
+
 using namespace std;
+
+#define MAX_TITULOS 10
+#define N_PEDIDOS_PASO 12
+#define TAM_LOTE 10
+#define LIBRERIAS 6
+#define CAP_CAJA 5
+
+struct Pedido {
+    int id_editorial;
+    string id_pedido;
+    string cod_libro;
+    string materia;
+    int unidades;
+    string estado;
+
+    Pedido() {
+        id_editorial = -1;
+        unidades = 0;
+        estado = "VACIO";
+    }
+};
+
+struct LibroStock {
+    string cod_libro;
+    string materia;
+    int unidades;
+};
+
+class Stock {
+private:
+    LibroStock libros[MAX_TITULOS];
+    int total_libros;
+
+public:
+    Stock();
+    ~Stock();
+
+    bool hayStock(string cod_libro, int unidades_pedidas);
+    void restarStock(string cod_libro, int unidades_a_restar);
+    void reponerStock(string cod_libro);
+    void mostrar();
+
+    // Función auxiliar para que generarPedidos() pida libros que SI existen
+    LibroStock getLibroAleatorio();
+};
 
 
 class NodoPila
 {
 private:
-    string valor;
+    Pedido valor;
     NodoPila *siguiente;
     friend class Pila;
 
 public:
-    NodoPila();
-    NodoPila(string v, NodoPila *sig = nullptr);
+    NodoPila(Pedido v, NodoPila *sig = nullptr);
     ~NodoPila();
 };
 
@@ -28,10 +74,11 @@ class Pila
         Pila();
         ~Pila();
         bool esVacia();
-        void apilar(string v);
-        void apilar();
-        void desapilar();
+        void apilar(Pedido v);
+        Pedido desapilar();
         int mostrar();
+        Pedido getCima();
+        int getTamano();
 
 };
 
@@ -40,27 +87,29 @@ class NodoCola
     friend class Cola;
 private:
     NodoCola *siguiente;
-    char elemento;
+    Pedido elemento;
 public:
-    NodoCola();
-    NodoCola(char e, NodoCola*sig = NULL);
+    NodoCola(Pedido e, NodoCola*sig = NULL);
     ~NodoCola();
 };
+
 class Cola
 {
 private:
     NodoCola * primero;
-        NodoCola * ultimo;
-        int longitud;
+    NodoCola * ultimo;
+    int longitud;
 public:
-    Cola(); ~Cola();
-    void encolar(char);
-    char inicio();
-    char fin();
-    char desencolar();
+    Cola();
+    ~Cola();
+    void encolar(Pedido e);
+    Pedido inicio();
+    Pedido fin();
+    Pedido desencolar();
     bool es_vacia();
-    void mostrarCola();
+    void mostrar();
     int get_longitud();
 };
-string generarPedidos();
+string Materias();
+Pedido generarPedidos(Stock& mi_stock);
 #endif

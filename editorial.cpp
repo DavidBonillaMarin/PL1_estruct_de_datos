@@ -3,22 +3,91 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <set>
+
 using namespace std;
-NodoPila::NodoPila()
-{
-    valor="";
-    siguiente=NULL;
-//ctor
+
+string Materias(){
+    string materias[] = {"Lengua", "Musica", "Matematicas", "Tecnologia", "Historia", "Fisica"};
+    int total = sizeof(materias) / sizeof(materias[0]);
+    int indice = rand() % total;
+    return materias[indice];
 }
-NodoPila::NodoPila(string v, NodoPila *sig)
+
+Stock::Stock() {
+    total_libros = MAX_TITULOS;
+    for (int i = 0; i < total_libros; i++) {
+        int codigo_1 = rand() % 900 + 100;
+        int codigo_2 = rand() % 90 + 10;
+        char letra = 'A' + rand() % 26;
+
+        stringstream ss_cod;
+        ss_cod << codigo_1 << letra << codigo_2;
+
+        libros[i].cod_libro = ss_cod.str();
+        libros[i].materia = Materias();
+        libros[i].unidades = rand() % 20 + 5;
+    }
+}
+
+Stock::~Stock() { }
+
+bool Stock::hayStock(string cod_libro, int unidades_pedidas) {
+    for (int i = 0; i < total_libros; i++) {
+        if (libros[i].cod_libro == cod_libro) {
+            return libros[i].unidades >= unidades_pedidas;
+        }
+    }
+    return false;
+}
+
+void Stock::restarStock(string cod_libro, int unidades_a_restar) {
+    for (int i = 0; i < total_libros; i++) {
+        if (libros[i].cod_libro == cod_libro) {
+            libros[i].unidades -= unidades_a_restar;
+            return;
+        }
+    }
+}
+
+void Stock::reponerStock(string cod_libro) { //para cuando un pedido va a imprenta
+    for (int i = 0; i < total_libros; i++) {
+        if (libros[i].cod_libro == cod_libro) {
+            libros[i].unidades += TAM_LOTE;
+            return;
+        }
+    }
+}
+
+void Stock::mostrar() {
+    cout << "== STOCK ==" << endl;
+    cout << left << setw(10) << "Codigo"
+         << "| " << setw(12) << "Materia"
+         << "| " << "Unidades" << endl;
+    cout << string(34, '-') << endl;
+
+    for (int i = 0; i < total_libros; i++) {
+        cout << left << setw(10) << libros[i].cod_libro
+             << "| " << setw(12) << libros[i].materia
+             << "| " << libros[i].unidades << endl;
+    }
+    cout << endl;
+}
+
+LibroStock Stock::getLibroAleatorio() {
+    int indice = rand() % total_libros;
+    return libros[indice];
+}
+
+
+NodoPila::NodoPila(Pedido v, NodoPila *sig)
 {
     valor = v;
     siguiente = sig;
 }
-NodoPila::~NodoPila()
-{
-//dtor
-}
+
+NodoPila::~NodoPila(){}
+
 Pila::Pila()
     {cima = nullptr;}
 Pila::~Pila()
@@ -27,90 +96,86 @@ Pila::~Pila()
 bool Pila::esVacia()
 { return cima == nullptr; }
 
-void Pila::apilar() {
-    string codigo = generarPedidos();
-    pnodo nuevo = new NodoPila(codigo, cima);
-    cima = nuevo;
-}
-void Pila::apilar(string v) {
+void Pila::apilar(Pedido v) {
     pnodo nuevo = new NodoPila(v, cima);
     cima = nuevo;
 }
-void Pila::desapilar() {
+Pedido Pila::desapilar() {
     if (cima) {
+        Pedido valor = cima->valor;
         pnodo nodo = cima;
         cima = nodo->siguiente;
         delete nodo;
+        return valor;
     } else {
         cout << "La pila está vacía.\n";
+        return Pedido();
     }
 }
 int Pila::mostrar() {
     if (esVacia()) {
-        cout << "No hay pedidos actualmente." << endl;
+        cout << "(vacia)" << endl;
     } else {
-        cout << left << setw(12) << "id_editorial"
-             << "| " << setw(12) << "id_pedido"
-             << "| " << setw(5) << "codigo"
-             << "| " << setw(12) << "materia"
+        cout << left << setw(5) << "Lib"
+             << "| " << setw(8) << "Id"
+             << "| " << setw(10) << "Codigo"
+             << "| " << setw(12) << "Materia"
              << "| " << setw(3) << "U"
-             << "| " << setw(15) << "estado" << endl;
-        cout << string(62, '-') << endl;
+             << "| " << "Estado" << endl;
+        cout << string(52, '-') << endl;
 
         pnodo actual = cima;
         while (actual) {
-            string valor = actual->valor;
-
-            size_t pos1 = valor.find('|');
-            size_t pos2 = valor.find('|', pos1 + 1);
-            size_t pos3 = valor.find('|', pos2 + 1);
-            size_t pos4 = valor.find('|', pos3 + 1);
-            size_t pos5 = valor.find('|', pos4 + 1);
-
-            string id_editorial = valor.substr(0, pos1);
-            string id_pedido = valor.substr(pos1 + 1, pos2 - pos1 - 1);
-            string codigo = valor.substr(pos2 + 1, pos3 - pos2 -1);
-            string materia = valor.substr(pos3 + 1, pos4 - pos3 -1);
-            string U = valor.substr(pos4 + 1, pos5 - pos4 -1);
-            string estado = valor.substr(pos5 + 1);
-
-
-            cout << left << setw(12) << id_editorial
-                 << "| " << setw(12) << id_pedido
-                 << "| " << setw(5) << codigo
-                 << "| " << setw(12) << materia
-                 << "| " << setw(3) << U
-                 << "| " << setw(15) << estado << endl;
-
+            cout << left << setw(5) << actual->valor.id_editorial
+                 << "| " << setw(8) << actual->valor.id_pedido
+                 << "| " << setw(10) << actual->valor.cod_libro
+                 << "| " << setw(12) << actual->valor.materia
+                 << "| " << setw(3) << actual->valor.unidades
+                 << "| " << actual->valor.estado << endl;
             actual = actual->siguiente;
         }
     }
     return 0;
 }
 
-
-NodoCola::NodoCola()
-{
-    elemento='0';
-    siguiente=NULL;
+Pedido Pila::getCima() {
+    if (cima) {
+        return cima->valor;
+    }
+    return Pedido();
 }
-NodoCola::NodoCola(char e, NodoCola*sig )
+
+int Pila::getTamano() {
+    int cont = 0;
+    pnodo actual = cima;
+    while(actual) {
+        cont++;
+        actual = actual->siguiente;
+    }
+    return cont;
+}
+
+NodoCola::NodoCola(Pedido e, NodoCola*sig )
 {
     elemento = e;
     siguiente = sig;
 }
-NodoCola::~NodoCola()
-{
-}
+NodoCola::~NodoCola() { }
 
-Cola::Cola()
-{primero = NULL; ultimo = NULL;
+Cola::Cola(){
+    primero = NULL;
+    ultimo = NULL;
     longitud = 0;
 }
-Cola::~Cola() { }
-void Cola::encolar(char elemento)
-{ NodoCola *nuevo_nodo = new
-NodoCola(elemento);
+
+Cola::~Cola() {
+    while(!es_vacia()){
+        desencolar();
+    }
+}
+
+void Cola::encolar(Pedido elemento) {
+    NodoCola *nuevo_nodo = new NodoCola(elemento);
     if(es_vacia())
     {   primero = nuevo_nodo;
         ultimo = nuevo_nodo;
@@ -121,50 +186,43 @@ NodoCola(elemento);
     }
     longitud++;
 }
-char Cola::desencolar()
+Pedido Cola::desencolar()
 {
     if (!es_vacia())
     {
-        char elemento = primero->elemento;
+        Pedido elemento_devuelto = primero->elemento;
         NodoCola *aux = primero;
 
-        if ((primero == ultimo) && (primero->siguiente == NULL))
-        {
+        if (primero == ultimo) {
             primero = NULL;
             ultimo = NULL;
-        }
-        else
-        {
+        } else {
             primero = primero->siguiente;
         }
 
         delete aux;
         longitud--;
-        return elemento;
+        return elemento_devuelto;
     }
     else
     {
         cout << "Error: la cola está vacía." << endl;
-        return '\0';
+        return Pedido();
     }
 }
-char Cola::inicio()
-{
-    if (!es_vacia())
-    {
+
+Pedido Cola::inicio() {
+    if (!es_vacia()) {
         return primero->elemento;
-
     }
-    return '\0';
+    return Pedido();
 }
 
-char Cola::fin()
-{
-    if (!es_vacia())
-    {
+Pedido Cola::fin() {
+    if (!es_vacia()) {
         return ultimo->elemento;
     }
-    return '\0';
+    return Pedido();
 }
 
 int Cola::get_longitud()
@@ -174,57 +232,50 @@ int Cola::get_longitud()
 
 bool Cola::es_vacia()
 {
-    return ((primero == NULL) && (ultimo == NULL));
+    return (primero == NULL);
 }
 
-void Cola::mostrarCola()
-{
+void Cola::mostrar() {
     NodoCola *aux = primero;
-    if (es_vacia())
-    {
-        cout << "Cola Vacía" << endl;
-    }
-    else
-    {
-        cout << "Datos de la Cola:" << endl;
-        while (aux)
-        {
-            cout << aux->elemento << endl;
+    if (es_vacia()) {
+        cout << "(vacia)" << endl;
+    } else {
+        cout << left << setw(5) << "Lib"
+             << "| " << setw(8) << "Id"
+             << "| " << setw(10) << "Codigo"
+             << "| " << setw(12) << "Materia"
+             << "| " << setw(3) << "U"
+             << "| " << "Estado" << endl;
+        cout << string(52, '-') << endl;
+
+        while (aux) {
+            cout << left << setw(5) << aux->elemento.id_editorial
+                 << "| " << setw(8) << aux->elemento.id_pedido
+                 << "| " << setw(10) << aux->elemento.cod_libro
+                 << "| " << setw(12) << aux->elemento.materia
+                 << "| " << setw(3) << aux->elemento.unidades
+                 << "| " << aux->elemento.estado << endl;
             aux = aux->siguiente;
         }
     }
-}
-string Materias(){
-    string materias[] = {"Lengua", "Musica", "Matematicas", "Tecnologia", "Historia", "Fisica"};
-    int total = sizeof(materias) / sizeof(materias[0]);
-    int indice = rand() % total;
-    return materias[indice];
+    cout << endl;
 }
 
-string generarPedidos() {
-    int pedido = rand() % 100000;
+Pedido generarPedidos(Stock& mi_stock) {
+    static int contador_pedidos = 1;
+    Pedido p;
+    stringstream ss_id;
+    ss_id << "P" << setw(5) << setfill('0') << contador_pedidos;
+    p.id_pedido = ss_id.str();
+    contador_pedidos++;
 
-    int id_editorial = rand() % 10;
+    LibroStock libro_pedido = mi_stock.getLibroAleatorio();
+    p.cod_libro = libro_pedido.cod_libro;
+    p.materia = libro_pedido.materia;
 
-    int codigo_1 = rand() % 1000;
-    int codigo_2 = rand() % 100;
+    p.id_editorial = rand() % LIBRERIAS;
+    p.unidades = rand() % 20 + 1;
+    p.estado = "Iniciado";
 
-    char letra = 'A' + rand() % 26;
-
-    string materia = Materias();
-
-    int U = rand() % 21;
-
-
-    stringstream ss;
-    ss << id_editorial << "|" << "P" <<
-    setw(5) << setfill('0') << pedido << "|" <<
-    setw(3) << setfill('0') << codigo_1 <<
-    letra <<
-    setw(2) << setfill('0') << codigo_2 << "|" <<
-    materia << "|" <<
-    setw(1) << U << "|";
-
-    return ss.str();
+    return p;
 }
-
