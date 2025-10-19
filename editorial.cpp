@@ -50,10 +50,13 @@ int Pila::mostrar() {
     if (esVacia()) {
         cout << "No hay pedidos actualmente." << endl;
     } else {
-        cout << left << setw(15) << "id_editorial"
-             << "| " << setw(15) << "id_pedido"
-             << "| " << setw(10) << "codigo" << endl;
-        cout << string(80, '-') << endl;
+        cout << left << setw(12) << "id_editorial"
+             << "| " << setw(12) << "id_pedido"
+             << "| " << setw(5) << "codigo"
+             << "| " << setw(12) << "materia"
+             << "| " << setw(3) << "U"
+             << "| " << setw(20) << "estado" << endl;
+        cout << string(82, '-') << endl;
 
         pnodo actual = cima;
         while (actual) {
@@ -61,14 +64,21 @@ int Pila::mostrar() {
 
             size_t pos1 = valor.find('|');
             size_t pos2 = valor.find('|', pos1 + 1);
+            size_t pos3 = valor.find('|', pos2 +1);
+            size_t pos4 = valor.find('|', pos3 + 1);
 
             string id_editorial = valor.substr(0, pos1);
             string id_pedido = valor.substr(pos1 + 1, pos2 - pos1 - 1);
-            string codigo = valor.substr(pos2 + 1);
+            string codigo = valor.substr(pos2 + 1, pos3 - pos2 -1);
+            string materia = valor.substr(pos3 + 1, pos4 - pos3 -1);
+            string U = valor.substr(pos4 +1);
 
-            cout << left << setw(15) << id_editorial
-                 << "| " << setw(15) << id_pedido
-                 << "| " << setw(10) << codigo << endl;
+
+            cout << left << setw(12) << id_editorial
+                 << "| " << setw(12) << id_pedido
+                 << "| " << setw(5) << codigo
+                 << "| " << setw(12) << materia
+                 << "| " << setw(3) << U << endl;
 
             actual = actual->siguiente;
         }
@@ -141,7 +151,9 @@ char Cola::inicio()
     if (!es_vacia())
     {
         return primero->elemento;
+
     }
+    return '\0';
 }
 
 char Cola::fin()
@@ -150,6 +162,7 @@ char Cola::fin()
     {
         return ultimo->elemento;
     }
+    return '\0';
 }
 
 int Cola::get_longitud()
@@ -179,7 +192,12 @@ void Cola::mostrarCola()
         }
     }
 }
-
+string Materias(){
+    string materias[] = {"Lengua", "Musica", "Matematicas", "Tecnologia", "Historia", "Fisica"};
+    int total = sizeof(materias) / sizeof(materias[0]);
+    int indice = rand() % total;
+    return materias[indice];
+}
 string generarPedidos() {
     int pedido = rand() % 100000;
 
@@ -190,12 +208,18 @@ string generarPedidos() {
 
     char letra = 'A' + rand() % 26;
 
+    string materia = Materias();
+
+    int U = rand() % 21;
+
     stringstream ss;
     ss << id_editorial << "|" << "P" <<
     setw(5) << setfill('0') << pedido << "|" <<
     setw(3) << setfill('0') << codigo_1 <<
     letra <<
-    setw(2) << setfill('0') << codigo_2;
+    setw(2) << setfill('0') << codigo_2 << "|" <<
+    materia << "|" <<
+    setw(1) << U;
 
     return ss.str();
 }
