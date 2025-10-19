@@ -1,4 +1,3 @@
-//encolar,desencolar,apilar y desapilar
 #include "editorial.h"
 #include <cstdlib>
 #include <ctime>
@@ -55,8 +54,8 @@ int Pila::mostrar() {
              << "| " << setw(5) << "codigo"
              << "| " << setw(12) << "materia"
              << "| " << setw(3) << "U"
-             << "| " << setw(20) << "estado" << endl;
-        cout << string(82, '-') << endl;
+             << "| " << setw(15) << "estado" << endl;
+        cout << string(62, '-') << endl;
 
         pnodo actual = cima;
         while (actual) {
@@ -64,21 +63,24 @@ int Pila::mostrar() {
 
             size_t pos1 = valor.find('|');
             size_t pos2 = valor.find('|', pos1 + 1);
-            size_t pos3 = valor.find('|', pos2 +1);
+            size_t pos3 = valor.find('|', pos2 + 1);
             size_t pos4 = valor.find('|', pos3 + 1);
+            size_t pos5 = valor.find('|', pos4 + 1);
 
             string id_editorial = valor.substr(0, pos1);
             string id_pedido = valor.substr(pos1 + 1, pos2 - pos1 - 1);
             string codigo = valor.substr(pos2 + 1, pos3 - pos2 -1);
             string materia = valor.substr(pos3 + 1, pos4 - pos3 -1);
-            string U = valor.substr(pos4 +1);
+            string U = valor.substr(pos4 + 1, pos5 - pos4 -1);
+            string estado = valor.substr(pos5 + 1);
 
 
             cout << left << setw(12) << id_editorial
                  << "| " << setw(12) << id_pedido
                  << "| " << setw(5) << codigo
                  << "| " << setw(12) << materia
-                 << "| " << setw(3) << U << endl;
+                 << "| " << setw(3) << U
+                 << "| " << setw(15) << estado << endl;
 
             actual = actual->siguiente;
         }
@@ -198,6 +200,7 @@ string Materias(){
     int indice = rand() % total;
     return materias[indice];
 }
+
 string generarPedidos() {
     int pedido = rand() % 100000;
 
@@ -212,6 +215,7 @@ string generarPedidos() {
 
     int U = rand() % 21;
 
+
     stringstream ss;
     ss << id_editorial << "|" << "P" <<
     setw(5) << setfill('0') << pedido << "|" <<
@@ -219,7 +223,7 @@ string generarPedidos() {
     letra <<
     setw(2) << setfill('0') << codigo_2 << "|" <<
     materia << "|" <<
-    setw(1) << U;
+    setw(1) << U << "|";
 
     return ss.str();
 }
