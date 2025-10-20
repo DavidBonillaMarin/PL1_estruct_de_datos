@@ -34,8 +34,7 @@ int main()
             for (int i = 0; i < N; i++) {
                 Pedido nuevo_pedido = generarPedidos(mi_stock);
                 cola_iniciado.encolar(nuevo_pedido);
-                cajas_librerias[nuevo_pedido.id_editorial].apilar(nuevo_pedido);
-
+                //cajas_librerias[nuevo_pedido.id_editorial].apilar(nuevo_pedido);
             }
 
             cout << "Generados " << N << " pedidos en QIniciado." << endl;
@@ -72,15 +71,21 @@ int main()
                 Pedido p_cima = cajas_librerias[i].getCima();
                 cout << "Libreria " << i
                      << " -> tam=" << cajas_librerias[i].getTamano()
-                     << " top-P=" << (p_cima.estado == "VACIO" ? "---" : p_cima.id_pedido)
+                     << " top-P=" << (p_cima.estado == EstadoPedido::Vacio ? "---" : p_cima.id_pedido)
                      << endl;
             }
             cout << endl;
 
         } else if (opcion == 4) {
-            //OPCIÓN 4 (PENDIENTE)
             cout << "Ejecutando 4 pasos de simulacion..." << endl;
-            // Aquí solo hay que llamar 4 veces a la función de la opcion 2
+
+            while (!cola_iniciado.es_vacia()){
+                Pedido p = cola_iniciado.desencolar();
+                int id_libreria = p.id_editorial;
+                p.estado = EstadoPedido::Caja;
+                cajas_librerias[id_libreria].apilar(p);
+            }
+
 
         } else if (opcion == 5) {
             //LÓGICA DE OPCIÓN 5 (Ver una caja)

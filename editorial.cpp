@@ -7,6 +7,18 @@
 
 using namespace std;
 
+string estadoToString(EstadoPedido estado) {
+    switch (estado) {
+        case EstadoPedido::Iniciado: return "Iniciado";
+        case EstadoPedido::Almacen:  return "Almacen";
+        case EstadoPedido::Imprenta: return "Imprenta";
+        case EstadoPedido::Listo:    return "Listo";
+        case EstadoPedido::Caja:     return "Caja";
+        case EstadoPedido::Vacio:    return "Vacio";
+        default:                     return "Desconocido";
+    }
+}
+
 string Materias(){
     string materias[] = {"Lengua", "Musica", "Matematicas", "Tecnologia", "Historia", "Fisica"};
     int total = sizeof(materias) / sizeof(materias[0]);
@@ -122,7 +134,7 @@ int Pila::mostrar() {
              << "| " << setw(12) << "Materia"
              << "| " << setw(3) << "U"
              << "| " << "Estado" << endl;
-        cout << string(52, '-') << endl;
+        cout << string(54, '-') << endl;
 
         pnodo actual = cima;
         while (actual) {
@@ -132,7 +144,7 @@ int Pila::mostrar() {
                  << "| " << setw(10) << actual->valor.cod_libro
                  << "| " << setw(12) << actual->valor.materia
                  << "| " << setw(3) << actual->valor.unidades
-                 << "| " << actual->valor.estado << endl;
+                 << "| " << estadoToString(actual->valor.estado) << endl;
             actual = actual->siguiente;
 
         }
@@ -247,8 +259,8 @@ void Cola::mostrar() {
              << "| " << setw(10) << "Codigo"
              << "| " << setw(12) << "Materia"
              << "| " << setw(3) << "U"
-             << "| " << "Estado" << endl;
-        cout << string(52, '-') << endl;
+             << "| " << "Estado" << "|" << endl;
+        cout << string(54, '-') << endl;
 
         while (aux) {
             cout << left << setw(5) << aux->elemento.id_editorial
@@ -256,7 +268,7 @@ void Cola::mostrar() {
                  << "| " << setw(10) << aux->elemento.cod_libro
                  << "| " << setw(12) << aux->elemento.materia
                  << "| " << setw(3) << aux->elemento.unidades
-                 << "| " << aux->elemento.estado << endl;
+                 << "| " << estadoToString(aux->elemento.estado) << endl;
             aux = aux->siguiente;
         }
     }
@@ -277,7 +289,7 @@ Pedido generarPedidos(Stock& mi_stock) {
 
     p.id_editorial = rand() % LIBRERIAS;
     p.unidades = rand() % 20 + 1;
-    p.estado = "Iniciado";
+    p.estado = EstadoPedido::Iniciado;
 
     return p;
 }

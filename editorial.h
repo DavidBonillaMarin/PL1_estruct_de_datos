@@ -12,18 +12,27 @@ using namespace std;
 #define LIBRERIAS 6
 #define CAP_CAJA 5
 
+enum EstadoPedido {
+    Vacio,
+    Iniciado,
+    Almacen,
+    Imprenta,
+    Listo,
+    Caja
+};
+
 struct Pedido {
     int id_editorial;
     string id_pedido;
     string cod_libro;
     string materia;
     int unidades;
-    string estado;
+    EstadoPedido estado;
 
     Pedido() {
         id_editorial = -1;
         unidades = 0;
-        estado = "VACIO";
+        estado = EstadoPedido::Vacio;
     }
 };
 
@@ -110,6 +119,7 @@ public:
     void mostrar();
     int get_longitud();
 };
+string estadoToString(EstadoPedido estado);
 string Materias();
 Pedido generarPedidos(Stock& mi_stock);
 #endif
