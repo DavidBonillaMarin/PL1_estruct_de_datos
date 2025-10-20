@@ -126,6 +126,7 @@ int Pila::mostrar() {
 
         pnodo actual = cima;
         while (actual) {
+            Pedido p = actual->valor;
             cout << left << setw(5) << actual->valor.id_editorial
                  << "| " << setw(8) << actual->valor.id_pedido
                  << "| " << setw(10) << actual->valor.cod_libro
@@ -133,6 +134,7 @@ int Pila::mostrar() {
                  << "| " << setw(3) << actual->valor.unidades
                  << "| " << actual->valor.estado << endl;
             actual = actual->siguiente;
+
         }
     }
     return 0;

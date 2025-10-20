@@ -34,6 +34,8 @@ int main()
             for (int i = 0; i < N; i++) {
                 Pedido nuevo_pedido = generarPedidos(mi_stock);
                 cola_iniciado.encolar(nuevo_pedido);
+                cajas_librerias[nuevo_pedido.id_editorial].apilar(nuevo_pedido);
+
             }
 
             cout << "Generados " << N << " pedidos en QIniciado." << endl;
@@ -63,6 +65,7 @@ int main()
 
             cout << "QListo:" << endl;
             cola_listo.mostrar();
+
 
             cout << "-- CAJAS (pilas por libreria) --" << endl;
             for(int i=0; i<LIBRERIAS; i++) {
