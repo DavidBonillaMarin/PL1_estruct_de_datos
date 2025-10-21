@@ -1,5 +1,6 @@
 #include <iostream>
 #include "editorial.h"
+#include <cstdlib>
 using namespace std;
 
 int main()
@@ -50,8 +51,18 @@ int main()
                 p.estado = EstadoPedido::Almacen;
                 cola_almacen.encolar(p);
             }
+            while (cola_imprenta.get_longitud()<12){
+                Pedido p = cola_almacen.desencolar();
+                int unidades_pedidas = p.unidades;
+                mi_stock.restarStock(p.cod_libro, p.unidades);
 
-        } else if (opcion == 3) {
+
+                if (mi_stock.hayStock(p.cod_libro, p.unidades)== false) {
+                    cola_imprenta.encolar(p);
+                    }
+                }
+            }
+         else if (opcion == 3) {
             //OPCIÓN 3 (Mostrar todo)
             cout << "--- ESTADO DEL SISTEMA ---" << endl;
 
