@@ -42,10 +42,14 @@ int main()
             cola_iniciado.mostrar();
 
         } else if (opcion == 2) {
-            //OPCIÓN 2 (PENDIENTE)
             cout << "Ejecutando un paso de simulacion..." << endl;
-            // Aquí irá la lógica de mover pedidos entre colas
-            // (Llamar a una función tipo 'ejecutarPaso(...)')
+
+            while (cola_almacen.get_longitud()<12) {
+                Pedido p = cola_iniciado.desencolar();
+                int id_libreria = p.id_editorial;
+                p.estado = EstadoPedido::Almacen;
+                cola_almacen.encolar(p);
+            }
 
         } else if (opcion == 3) {
             //OPCIÓN 3 (Mostrar todo)
