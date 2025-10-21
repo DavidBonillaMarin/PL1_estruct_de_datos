@@ -52,7 +52,7 @@ public:
     ~Stock();
 
     bool hayStock(string cod_libro, int unidades_pedidas);
-    void restarStock(string cod_libro, int unidades_a_restar);
+    int restarStock(string cod_libro, int unidades_a_restar);
     void reponerStock(string cod_libro);
     void mostrar();
 
@@ -121,5 +121,6 @@ public:
 };
 string estadoToString(EstadoPedido estado);
 string Materias();
+int restarStock(string cod_libro, int unidades_a_restar);
 Pedido generarPedidos(Stock& mi_stock);
 #endif

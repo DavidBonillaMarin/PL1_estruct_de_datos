@@ -51,17 +51,22 @@ int main()
                 p.estado = EstadoPedido::Almacen;
                 cola_almacen.encolar(p);
             }
-            while (cola_imprenta.get_longitud()<12){
+            while (cola_almacen.get_longitud()<12){
+                int pedidos_a_imprimir;
                 Pedido p = cola_almacen.desencolar();
-                int unidades_pedidas = p.unidades;
-                mi_stock.restarStock(p.cod_libro, p.unidades);
 
-
-                if (mi_stock.hayStock(p.cod_libro, p.unidades)== false) {
+                if (!mi_stock.hayStock(p.cod_libro, p.unidades)) {
                     cola_imprenta.encolar(p);
-                    }
+                    p.estado = EstadoPedido::Imprenta;
+
+                    // restarStock devuelve el stock restante
+                    pedidos_a_imprimir = abs(mi_stock.restarStock(p.cod_libro, p.unidades));
+
+                    // actualizar unidades del pedido si quieres
+                    p.unidades = pedidos_a_imprimir;
                 }
             }
+        }
          else if (opcion == 3) {
             //OPCIÓN 3 (Mostrar todo)
             cout << "--- ESTADO DEL SISTEMA ---" << endl;

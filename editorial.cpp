@@ -52,13 +52,14 @@ bool Stock::hayStock(string cod_libro, int unidades_pedidas) {
     }
     return false;
 }
-void Stock::restarStock(string cod_libro, int unidades_a_restar) {
+int Stock::restarStock(string cod_libro, int unidades_a_restar) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
             libros[i].unidades -= unidades_a_restar;
-            return;
+            return libros[i].unidades;
         }
     }
+    return -1;
 }
 
 void Stock::reponerStock(string cod_libro) { //para cuando un pedido va a imprenta
