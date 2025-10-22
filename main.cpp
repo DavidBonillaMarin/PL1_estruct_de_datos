@@ -45,27 +45,10 @@ int main()
         } else if (opcion == 2) {
             cout << "Ejecutando un paso de simulacion..." << endl;
 
-            while (cola_almacen.get_longitud()<12) {
-                Pedido p = cola_iniciado.desencolar();
-                int id_libreria = p.id_editorial;
-                p.estado = EstadoPedido::Almacen;
-                cola_almacen.encolar(p);
-            }
-            while (cola_almacen.get_longitud()<12){
-                int pedidos_a_imprimir;
-                Pedido p = cola_almacen.desencolar();
+            ejecutarPasoDeSimulacion(cola_iniciado, cola_almacen, cola_imprenta, cola_listo, cajas_librerias, mi_stock);
+            cout << "Paso ejecutado." << endl;
+            cout << "Eliga la opcion 3 para ver el estado actual del sistema." << endl << endl;
 
-                if (!mi_stock.hayStock(p.cod_libro, p.unidades)) {
-                    cola_imprenta.encolar(p);
-                    p.estado = EstadoPedido::Imprenta;
-
-                    // restarStock devuelve el stock restante
-                    pedidos_a_imprimir = abs(mi_stock.restarStock(p.cod_libro, p.unidades));
-
-                    // actualizar unidades del pedido si quieres
-                    p.unidades = pedidos_a_imprimir;
-                }
-            }
         }
          else if (opcion == 3) {
             //OPCIÓN 3 (Mostrar todo)

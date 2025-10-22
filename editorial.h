@@ -52,7 +52,7 @@ public:
     ~Stock();
 
     bool hayStock(string cod_libro, int unidades_pedidas);
-    int restarStock(string cod_libro, int unidades_a_restar);
+    void restarStock(string cod_libro, int unidades_a_restar);
     void reponerStock(string cod_libro);
     void mostrar();
 
@@ -88,7 +88,7 @@ class Pila
         int mostrar();
         Pedido getCima();
         int getTamano();
-
+        void vaciarCaja();
 };
 
 class NodoCola
@@ -121,6 +121,6 @@ public:
 };
 string estadoToString(EstadoPedido estado);
 string Materias();
-int restarStock(string cod_libro, int unidades_a_restar);
 Pedido generarPedidos(Stock& mi_stock);
+void ejecutarPasoDeSimulacion(Cola& qIniciado, Cola& qAlmacen, Cola& qImprenta, Cola& qListo, Pila cajas[], Stock& stock);
 #endif

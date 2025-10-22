@@ -52,14 +52,13 @@ bool Stock::hayStock(string cod_libro, int unidades_pedidas) {
     }
     return false;
 }
-int Stock::restarStock(string cod_libro, int unidades_a_restar) {
+void Stock::restarStock(string cod_libro, int unidades_a_restar) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
             libros[i].unidades -= unidades_a_restar;
-            return libros[i].unidades;
+            return;
         }
     }
-    return -1;
 }
 
 void Stock::reponerStock(string cod_libro) { //para cuando un pedido va a imprenta
@@ -167,6 +166,13 @@ int Pila::getTamano() {
         actual = actual->siguiente;
     }
     return cont;
+}
+
+void Pila::vaciarCaja() {
+    cout << "Caja llena. Enviando pedidos y vaciando caja..." << endl;
+    while (!esVacia()) {
+        desapilar();
+    }
 }
 
 NodoCola::NodoCola(Pedido e, NodoCola*sig )
@@ -292,4 +298,65 @@ Pedido generarPedidos(Stock& mi_stock) {
     p.estado = EstadoPedido::Iniciado;
 
     return p;
+}
+
+void ejecutarPasoDeSimulacion(Cola& qIniciado, Cola& qAlmacen, Cola& qImprenta, Cola& qListo, Pila cajas[], Stock& stock) {
+
+    //FASE 4: de listo a caja
+    int pedidos_en_listo = qListo.get_longitud(); //estp es para no pasar pedidos que lleguen nuevos
+    for (int i = 0; i < pedidos_en_listo; i++) {
+        Pedido p = qListo.inicio(); // mira el primer pedido sin sacarlo
+        int id_lib = p.id_editorial;
+
+        if (cajas[id_lib].getTamano() < CAP_CAJA) {  //comprueba la capacidad de la caja de esa librería
+            p = qListo.desencolar();
+            p.estado = EstadoPedido::Caja;
+            cajas[id_lib].apilar(p);
+        } else {
+            cout << "AVISO: La caja de la libreria " << id_lib << " esta llena." << endl;
+            cajas[id_lib].vaciarCaja();
+
+            p = qListo.desencolar();
+            p.estado = EstadoPedido::Caja;
+            cajas[id_lib].apilar(p);
+        }
+    }
+
+    //FASE 3: de imprenta a listo
+    while (!qImprenta.es_vacia()) {
+        Pedido p = qImprenta.desencolar();
+
+        p.estado = EstadoPedido::Listo;
+        qListo.encolar(p);
+
+        stock.reponerStock(p.cod_libro); //hay que reponerlo aqui?
+    }
+
+    //FASE 2: de almacen a listo o imprenta
+
+    int pedidos_en_almacen = qAlmacen.get_longitud();
+    for (int i = 0; i < pedidos_en_almacen; i++) {
+        Pedido p = qAlmacen.desencolar();
+
+        if (stock.hayStock(p.cod_libro, p.unidades)) {
+            stock.restarStock(p.cod_libro, p.unidades);
+            p.estado = EstadoPedido::Listo;
+            qListo.encolar(p);
+        } else {
+            p.estado = EstadoPedido::Imprenta;
+            qImprenta.encolar(p);
+        }
+    }
+
+    // FASE 1: de iniciado a almacen
+    int num_a_mover = N_PEDIDOS_PASO;
+    if (qIniciado.get_longitud() < num_a_mover) {
+        num_a_mover = qIniciado.get_longitud(); //es decir si el tam es menor q 12 entonces el num a mover será ese numero (p ej 8)
+    }
+
+    for (int i = 0; i < num_a_mover; i++) {
+        Pedido p = qIniciado.desencolar();
+        p.estado = EstadoPedido::Almacen;
+        qAlmacen.encolar(p);
+    }
 }
