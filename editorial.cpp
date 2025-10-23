@@ -56,19 +56,36 @@ void Stock::restarStock(string cod_libro, int unidades_a_restar) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
             libros[i].unidades -= unidades_a_restar;
+
+            cout << " Se han restado " << unidades_a_restar
+                 << " unidades del libro " << cod_libro
+                 << " Stock restante: " << libros[i].unidades << endl;
+
+            if (libros[i].unidades <= 0) {
+                cout << "El libro " << cod_libro << " se ha agotado. Reponiendo stock..." << endl;
+                reponerStock(cod_libro);
+            }
             return;
         }
     }
+
+    cout << " No se encontró el libro " << cod_libro << " para restar stock." << endl;
 }
 
-void Stock::reponerStock(string cod_libro) { //para cuando un pedido va a imprenta
+void Stock::reponerStock(string cod_libro) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
             libros[i].unidades += TAM_LOTE;
+
+            cout << " Repuesto el stock del libro " << cod_libro
+                 << " Nuevo stock: " << libros[i].unidades << " unidades." << endl;
             return;
         }
     }
+    cout << " No se pudo reponer el stock del libro " << cod_libro
+         << " porque no existe en el inventario." << endl;
 }
+
 
 void Stock::mostrar() {
     cout << "== STOCK ==" << endl;
