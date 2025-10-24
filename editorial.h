@@ -43,42 +43,40 @@ struct LibroStock {
 };
 
 class Stock {
-private:
-    LibroStock libros[MAX_TITULOS];
-    int total_libros;
+    private:
+        LibroStock libros[MAX_TITULOS];
+        int total_libros;
 
-public:
-    Stock();
-    ~Stock();
+    public:
+        Stock();
+        ~Stock();
+        bool hayStock(string cod_libro, int unidades_pedidas);
+        void restarStock(string cod_libro, int unidades_a_restar);
+        void reponerStock(string cod_libro);
+        void mostrar();
 
-    bool hayStock(string cod_libro, int unidades_pedidas);
-    void restarStock(string cod_libro, int unidades_a_restar);
-    void reponerStock(string cod_libro);
-    void mostrar();
-
-    // Función auxiliar para que generarPedidos() pida libros que SI existen
-    LibroStock getLibroAleatorio();
+        // Función auxiliar para que generarPedidos() pida libros que SI existen
+        LibroStock getLibroAleatorio();
 };
 
 
-class NodoPila
-{
-private:
-    Pedido valor;
-    NodoPila *siguiente;
-    friend class Pila;
+class NodoPila {
+    private:
+        Pedido valor;
+        NodoPila *siguiente;
+        friend class Pila;
 
-public:
-    NodoPila(Pedido v, NodoPila *sig = nullptr);
-    ~NodoPila();
+    public:
+        NodoPila(Pedido v, NodoPila *sig = nullptr);
+        ~NodoPila();
 };
 
 typedef NodoPila *pnodo;
 
-class Pila
-{
+class Pila {
     private:
         pnodo cima;
+
     public:
         Pila();
         ~Pila();
@@ -91,36 +89,40 @@ class Pila
         void vaciarCaja();
 };
 
-class NodoCola
-{
+class NodoCola {
     friend class Cola;
-private:
-    NodoCola *siguiente;
-    Pedido elemento;
-public:
-    NodoCola(Pedido e, NodoCola*sig = NULL);
-    ~NodoCola();
+    private:
+        NodoCola *siguiente;
+        Pedido elemento;
+    public:
+        NodoCola(Pedido e, NodoCola*sig = NULL);
+        ~NodoCola();
 };
 
-class Cola
-{
-private:
-    NodoCola * primero;
-    NodoCola * ultimo;
-    int longitud;
-public:
-    Cola();
-    ~Cola();
-    void encolar(Pedido e);
-    Pedido inicio();
-    Pedido fin();
-    Pedido desencolar();
-    bool es_vacia();
-    void mostrar();
-    int get_longitud();
+class Cola {
+    private:
+        NodoCola * primero;
+        NodoCola * ultimo;
+        int longitud;
+
+    public:
+        Cola();
+        ~Cola();
+        void encolar(Pedido e);
+        Pedido inicio();
+        Pedido fin();
+        Pedido desencolar();
+        bool es_vacia();
+        void mostrar();
+        int get_longitud();
 };
+
 string estadoToString(EstadoPedido estado);
+
 string Materias();
+
 Pedido generarPedidos(Stock& mi_stock);
+
 void ejecutarPasoDeSimulacion(Cola& qIniciado, Cola& qAlmacen, Cola& qImprenta, Cola& qListo, Pila cajas[], Stock& stock);
+
 #endif

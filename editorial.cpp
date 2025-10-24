@@ -19,7 +19,7 @@ string estadoToString(EstadoPedido estado) {
     }
 }
 
-string Materias(){
+string Materias() {
     string materias[] = {"Lengua", "Musica", "Matematicas", "Tecnologia", "Historia", "Fisica"};
     int total = sizeof(materias) / sizeof(materias[0]);
     int indice = rand() % total;
@@ -52,6 +52,7 @@ bool Stock::hayStock(string cod_libro, int unidades_pedidas) {
     }
     return false;
 }
+
 void Stock::restarStock(string cod_libro, int unidades_a_restar) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
@@ -68,7 +69,6 @@ void Stock::restarStock(string cod_libro, int unidades_a_restar) {
             return;
         }
     }
-
     cout << " No se encontró el libro " << cod_libro << " para restar stock." << endl;
 }
 
@@ -85,7 +85,6 @@ void Stock::reponerStock(string cod_libro) {
     cout << " No se pudo reponer el stock del libro " << cod_libro
          << " porque no existe en el inventario." << endl;
 }
-
 
 void Stock::mostrar() {
     cout << "== STOCK ==" << endl;
@@ -107,27 +106,30 @@ LibroStock Stock::getLibroAleatorio() {
     return libros[indice];
 }
 
-
-NodoPila::NodoPila(Pedido v, NodoPila *sig)
-{
+NodoPila::NodoPila(Pedido v, NodoPila *sig) {
     valor = v;
     siguiente = sig;
 }
 
-NodoPila::~NodoPila(){}
+NodoPila::~NodoPila() { }
 
-Pila::Pila()
-    {cima = nullptr;}
-Pila::~Pila()
-    { while(cima) desapilar();}
+Pila::Pila() {
+    cima = nullptr;
+}
 
-bool Pila::esVacia()
-{ return cima == nullptr; }
+Pila::~Pila() {
+    while(cima) desapilar();
+}
+
+bool Pila::esVacia() {
+    return cima == nullptr;
+}
 
 void Pila::apilar(Pedido v) {
     pnodo nuevo = new NodoPila(v, cima);
     cima = nuevo;
 }
+
 Pedido Pila::desapilar() {
     if (cima) {
         Pedido valor = cima->valor;
@@ -140,6 +142,7 @@ Pedido Pila::desapilar() {
         return Pedido();
     }
 }
+
 int Pila::mostrar() {
     if (esVacia()) {
         cout << "(vacia)" << endl;
@@ -162,7 +165,6 @@ int Pila::mostrar() {
                  << "| " << setw(3) << actual->valor.unidades
                  << "| " << estadoToString(actual->valor.estado) << endl;
             actual = actual->siguiente;
-
         }
     }
     return 0;
@@ -192,41 +194,39 @@ void Pila::vaciarCaja() {
     }
 }
 
-NodoCola::NodoCola(Pedido e, NodoCola*sig )
-{
+NodoCola::NodoCola(Pedido e, NodoCola*sig) {
     elemento = e;
     siguiente = sig;
 }
+
 NodoCola::~NodoCola() { }
 
-Cola::Cola(){
+Cola::Cola() {
     primero = NULL;
     ultimo = NULL;
     longitud = 0;
 }
 
 Cola::~Cola() {
-    while(!es_vacia()){
+    while(!es_vacia()) {
         desencolar();
     }
 }
 
 void Cola::encolar(Pedido elemento) {
     NodoCola *nuevo_nodo = new NodoCola(elemento);
-    if(es_vacia())
-    {   primero = nuevo_nodo;
+    if(es_vacia()) {
+        primero = nuevo_nodo;
         ultimo = nuevo_nodo;
-    }
-    else
-    {   ultimo->siguiente = nuevo_nodo;
+    } else {
+        ultimo->siguiente = nuevo_nodo;
         ultimo = nuevo_nodo;
     }
     longitud++;
 }
-Pedido Cola::desencolar()
-{
-    if (!es_vacia())
-    {
+
+Pedido Cola::desencolar() {
+    if (!es_vacia()) {
         Pedido elemento_devuelto = primero->elemento;
         NodoCola *aux = primero;
 
@@ -236,13 +236,10 @@ Pedido Cola::desencolar()
         } else {
             primero = primero->siguiente;
         }
-
         delete aux;
         longitud--;
         return elemento_devuelto;
-    }
-    else
-    {
+    } else {
         cout << "Error: la cola está vacía." << endl;
         return Pedido();
     }
@@ -262,18 +259,17 @@ Pedido Cola::fin() {
     return Pedido();
 }
 
-int Cola::get_longitud()
-{
+int Cola::get_longitud() {
     return longitud;
 }
 
-bool Cola::es_vacia()
-{
+bool Cola::es_vacia() {
     return (primero == NULL);
 }
 
 void Cola::mostrar() {
     NodoCola *aux = primero;
+
     if (es_vacia()) {
         cout << "(vacia)" << endl;
     } else {
@@ -320,12 +316,12 @@ Pedido generarPedidos(Stock& mi_stock) {
 void ejecutarPasoDeSimulacion(Cola& qIniciado, Cola& qAlmacen, Cola& qImprenta, Cola& qListo, Pila cajas[], Stock& stock) {
 
     //FASE 4: de listo a caja
-    int pedidos_en_listo = qListo.get_longitud(); //estp es para no pasar pedidos que lleguen nuevos
+    int pedidos_en_listo = qListo.get_longitud(); //esto es para no pasar pedidos que lleguen nuevos
     for (int i = 0; i < pedidos_en_listo; i++) {
         Pedido p = qListo.inicio(); // mira el primer pedido sin sacarlo
         int id_lib = p.id_editorial;
 
-        if (cajas[id_lib].getTamano() < CAP_CAJA) {  //comprueba la capacidad de la caja de esa librería
+        if (cajas[id_lib].getTamano() < CAP_CAJA) { //comprueba la capacidad de la caja de esa librería
             p = qListo.desencolar();
             p.estado = EstadoPedido::Caja;
             cajas[id_lib].apilar(p);
@@ -346,11 +342,10 @@ void ejecutarPasoDeSimulacion(Cola& qIniciado, Cola& qAlmacen, Cola& qImprenta, 
         p.estado = EstadoPedido::Listo;
         qListo.encolar(p);
 
-        stock.reponerStock(p.cod_libro); //hay que reponerlo aqui?
+        stock.reponerStock(p.cod_libro);
     }
 
     //FASE 2: de almacen a listo o imprenta
-
     int pedidos_en_almacen = qAlmacen.get_longitud();
     for (int i = 0; i < pedidos_en_almacen; i++) {
         Pedido p = qAlmacen.desencolar();
