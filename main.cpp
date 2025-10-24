@@ -17,7 +17,8 @@ int main()
 
     Pila cajas_librerias[LIBRERIAS];
 
-    while (opcion!=0){
+    while (opcion!=0) {
+
         cout << left << "--- MENU ---" << endl
              << "1) Generar N pedidos" << endl
              << "2) Paso (una fase)" << endl
@@ -29,30 +30,32 @@ int main()
         cin >> opcion;
 
         if (opcion == 1) {
+
             int N;
-            cout << "Introduce el numero de pedidos que desea crear: ";
+            cout << endl << "Introduce el numero de pedidos que desea crear: ";
             cin >> N;
+
             for (int i = 0; i < N; i++) {
                 Pedido nuevo_pedido = generarPedidos(mi_stock);
                 cola_iniciado.encolar(nuevo_pedido);
-                //cajas_librerias[nuevo_pedido.id_editorial].apilar(nuevo_pedido);
             }
 
-            cout << "Generados " << N << " pedidos en QIniciado." << endl;
+            cout << endl << "Generados " << N << " pedidos en QIniciado." << endl;
             cout << "\nQIniciado:" << endl;
             cola_iniciado.mostrar();
 
         } else if (opcion == 2) {
-            cout << "Ejecutando un paso de simulacion..." << endl;
+
+            cout << endl << "Ejecutando un paso de simulacion..." << endl;
 
             ejecutarPasoDeSimulacion(cola_iniciado, cola_almacen, cola_imprenta, cola_listo, cajas_librerias, mi_stock);
-            cout << "Paso ejecutado." << endl;
-            cout << "Eliga la opcion 3 para ver el estado actual del sistema." << endl << endl;
 
-        }
-         else if (opcion == 3) {
-            //OPCIÓN 3 (Mostrar todo)
-            cout << "--- ESTADO DEL SISTEMA ---" << endl;
+            cout << "Paso ejecutado." << endl;
+            cout << endl << "Elija la opcion 3 para ver el estado actual del sistema." << endl << endl;
+
+        } else if (opcion == 3) {
+
+            cout << endl << "--- ESTADO DEL SISTEMA ---" << endl << endl;
 
             mi_stock.mostrar();
 
@@ -68,19 +71,23 @@ int main()
             cout << "QListo:" << endl;
             cola_listo.mostrar();
 
-
             cout << "-- CAJAS (pilas por libreria) --" << endl;
+
             for(int i=0; i<LIBRERIAS; i++) {
+
                 Pedido p_cima = cajas_librerias[i].getCima();
+
                 cout << "Libreria " << i
                      << " -> tam=" << cajas_librerias[i].getTamano()
                      << " top-P=" << (p_cima.estado == EstadoPedido::Vacio ? "---" : p_cima.id_pedido)
                      << endl;
             }
+
             cout << endl;
 
         } else if (opcion == 4) {
-            cout << "Ejecutando 4 pasos de simulacion..." << endl;
+
+            cout << endl << "Ejecutando 4 pasos de simulacion..." << endl;
 
             while (!cola_iniciado.es_vacia()){
                 Pedido p = cola_iniciado.desencolar();
@@ -89,11 +96,13 @@ int main()
                 cajas_librerias[id_libreria].apilar(p);
             }
 
+            cout << "Paso ejecutado." << endl;
+            cout << endl << "Elija la opcion 3 para ver el estado actual del sistema." << endl << endl;
 
         } else if (opcion == 5) {
-            //LÓGICA DE OPCIÓN 5 (Ver una caja)
+
             int id_lib;
-            cout << "Introduce el id de la libreria (0 a " << LIBRERIAS-1 << "): ";
+            cout << endl << "Introduce el id de la libreria (0 a " << LIBRERIAS-1 << "): ";
             cin >> id_lib;
 
             if (id_lib >= 0 && id_lib < LIBRERIAS) {
@@ -105,6 +114,6 @@ int main()
             cout << endl;
         }
     }
-    cout << "Saliendo del programa..." << endl;
+    cout << endl << "Saliendo del programa..." << endl;
     return 0;
 }
