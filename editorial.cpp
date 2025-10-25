@@ -4,9 +4,9 @@
 #include <iomanip>
 #include <sstream>
 #include <set>
-
 using namespace std;
 
+//pasa por los distintos estados del pedido
 string estadoToString(EstadoPedido estado) {
     switch (estado) {
         case EstadoPedido::Iniciado: return "Iniciado";
@@ -19,6 +19,7 @@ string estadoToString(EstadoPedido estado) {
     }
 }
 
+// Devuelve aleatoriamente una materia de entre varias posibles
 string Materias() {
     string materias[] = {"Lengua", "Musica", "Matematicas", "Tecnologia", "Historia", "Fisica"};
     int total = sizeof(materias) / sizeof(materias[0]);
@@ -26,6 +27,7 @@ string Materias() {
     return materias[indice];
 }
 
+// Constructor de la clase Stock: genera libros aleatorios con códigos, materias y unidades
 Stock::Stock() {
     total_libros = MAX_TITULOS;
     for (int i = 0; i < total_libros; i++) {
@@ -41,9 +43,9 @@ Stock::Stock() {
         libros[i].unidades = rand() % 20 + 5;
     }
 }
-
+// Destructor de la clase Stock (actualmente no realiza ninguna acción)
 Stock::~Stock() { }
-
+// Comprueba si existe suficiente stock de un libro dado
 bool Stock::hayStock(string cod_libro, int unidades_pedidas) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
@@ -53,6 +55,7 @@ bool Stock::hayStock(string cod_libro, int unidades_pedidas) {
     return false;
 }
 
+// Resta una cantidad de unidades del stock de un libro y repone si es necesario
 void Stock::restarStock(string cod_libro, int unidades_a_restar) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
@@ -72,6 +75,7 @@ void Stock::restarStock(string cod_libro, int unidades_a_restar) {
     cout << " No se encontró el libro " << cod_libro << " para restar stock." << endl;
 }
 
+// Añade unidades al stock de un libro cuando se ha agotado
 void Stock::reponerStock(string cod_libro) {
     for (int i = 0; i < total_libros; i++) {
         if (libros[i].cod_libro == cod_libro) {
@@ -86,6 +90,7 @@ void Stock::reponerStock(string cod_libro) {
          << " porque no existe en el inventario." << endl;
 }
 
+// Muestra por consola la lista de libros disponibles con su materia y unidades
 void Stock::mostrar() {
     cout << "== STOCK ==" << endl;
     cout << left << setw(10) << "Codigo"
@@ -101,35 +106,42 @@ void Stock::mostrar() {
     cout << endl;
 }
 
+// Devuelve un libro aleatorio del stock disponible
 LibroStock Stock::getLibroAleatorio() {
     int indice = rand() % total_libros;
     return libros[indice];
 }
-
+// Constructor de NodoPila: crea un nodo con un pedido y un puntero al siguiente
 NodoPila::NodoPila(Pedido v, NodoPila *sig) {
     valor = v;
     siguiente = sig;
 }
 
+// Destructor de NodoPila (no realiza acciones específicas)
 NodoPila::~NodoPila() { }
 
+// Constructor de Pila: inicializa la pila vacía
 Pila::Pila() {
     cima = nullptr;
 }
 
+// Destructor de Pila: libera todos los nodos desapilando uno a uno
 Pila::~Pila() {
     while(cima) desapilar();
 }
 
+// Comprueba si la pila está vacía
 bool Pila::esVacia() {
     return cima == nullptr;
 }
 
+// Inserta un nuevo pedido en la parte superior de la pila
 void Pila::apilar(Pedido v) {
     pnodo nuevo = new NodoPila(v, cima);
     cima = nuevo;
 }
 
+// Elimina el elemento superior de la pila y lo devuelve
 Pedido Pila::desapilar() {
     if (cima) {
         Pedido valor = cima->valor;
@@ -143,6 +155,7 @@ Pedido Pila::desapilar() {
     }
 }
 
+// Muestra por consola todos los pedidos almacenados en la pila
 int Pila::mostrar() {
     if (esVacia()) {
         cout << "(vacia)" << endl;
@@ -152,8 +165,9 @@ int Pila::mostrar() {
              << "| " << setw(10) << "Codigo"
              << "| " << setw(12) << "Materia"
              << "| " << setw(3) << "U"
-             << "| " << "Estado" << endl;
-        cout << string(54, '-') << endl;
+             << "| " << setw(8) << "Estado"
+             << "| " << endl;
+        cout << string(57, '-') << endl;
 
         pnodo actual = cima;
         while (actual) {
@@ -163,13 +177,15 @@ int Pila::mostrar() {
                  << "| " << setw(10) << actual->valor.cod_libro
                  << "| " << setw(12) << actual->valor.materia
                  << "| " << setw(3) << actual->valor.unidades
-                 << "| " << estadoToString(actual->valor.estado) << endl;
+                 << "| " << setw(8) << estadoToString(actual->valor.estado)
+                 << "| " << endl;
             actual = actual->siguiente;
         }
     }
     return 0;
 }
 
+// Devuelve el pedido que está en la cima de la pila sin eliminarlo
 Pedido Pila::getCima() {
     if (cima) {
         return cima->valor;
@@ -177,6 +193,7 @@ Pedido Pila::getCima() {
     return Pedido();
 }
 
+// Devuelve el número total de elementos que hay en la pila
 int Pila::getTamano() {
     int cont = 0;
     pnodo actual = cima;
@@ -187,6 +204,7 @@ int Pila::getTamano() {
     return cont;
 }
 
+// Vacía completamente la pila (la "caja") eliminando todos los pedidos
 void Pila::vaciarCaja() {
     cout << "Caja llena. Enviando pedidos y vaciando caja..." << endl;
     while (!esVacia()) {
@@ -194,25 +212,30 @@ void Pila::vaciarCaja() {
     }
 }
 
+// Constructor de NodoCola: crea un nodo con un pedido y un puntero al siguiente
 NodoCola::NodoCola(Pedido e, NodoCola*sig) {
     elemento = e;
     siguiente = sig;
 }
 
+// Destructor de NodoCola (no realiza ninguna accion)
 NodoCola::~NodoCola() { }
 
+// Constructor de Cola: inicializa una cola vacía
 Cola::Cola() {
     primero = NULL;
     ultimo = NULL;
     longitud = 0;
 }
 
+// Destructor de Cola: vacía la cola liberando toda la memoria
 Cola::~Cola() {
     while(!es_vacia()) {
         desencolar();
     }
 }
 
+// Añade un nuevo pedido al final de la cola
 void Cola::encolar(Pedido elemento) {
     NodoCola *nuevo_nodo = new NodoCola(elemento);
     if(es_vacia()) {
@@ -225,6 +248,7 @@ void Cola::encolar(Pedido elemento) {
     longitud++;
 }
 
+// Elimina y devuelve el primer elemento de la cola
 Pedido Cola::desencolar() {
     if (!es_vacia()) {
         Pedido elemento_devuelto = primero->elemento;
@@ -245,6 +269,7 @@ Pedido Cola::desencolar() {
     }
 }
 
+// Devuelve el primer elemento de la cola sin eliminarlo
 Pedido Cola::inicio() {
     if (!es_vacia()) {
         return primero->elemento;
@@ -252,6 +277,7 @@ Pedido Cola::inicio() {
     return Pedido();
 }
 
+// Devuelve el último elemento de la cola sin eliminarlo
 Pedido Cola::fin() {
     if (!es_vacia()) {
         return ultimo->elemento;
@@ -259,14 +285,17 @@ Pedido Cola::fin() {
     return Pedido();
 }
 
+// Devuelve el número total de elementos en la cola
 int Cola::get_longitud() {
     return longitud;
 }
 
+// Comprueba si la cola está vacía
 bool Cola::es_vacia() {
     return (primero == NULL);
 }
 
+// Muestra por consola todos los pedidos almacenados en la cola
 void Cola::mostrar() {
     NodoCola *aux = primero;
 
@@ -278,8 +307,8 @@ void Cola::mostrar() {
              << "| " << setw(10) << "Codigo"
              << "| " << setw(12) << "Materia"
              << "| " << setw(3) << "U"
-             << "| " << "Estado" << "|" << endl;
-        cout << string(54, '-') << endl;
+             << "| " << setw(8) << "Estado" << "|" << endl;
+        cout << string(57, '-') << endl;
 
         while (aux) {
             cout << left << setw(5) << aux->elemento.id_editorial
@@ -287,25 +316,29 @@ void Cola::mostrar() {
                  << "| " << setw(10) << aux->elemento.cod_libro
                  << "| " << setw(12) << aux->elemento.materia
                  << "| " << setw(3) << aux->elemento.unidades
-                 << "| " << estadoToString(aux->elemento.estado) << endl;
+                 << "| " << setw(8) << estadoToString(aux->elemento.estado)
+                 << "| " << endl;
             aux = aux->siguiente;
         }
     }
     cout << endl;
 }
 
+// Genera un nuevo pedido con datos aleatorios y un identificador incremental(P0001 -> P0002 -> P0003 etc)
 Pedido generarPedidos(Stock& mi_stock) {
     static int contador_pedidos = 1;
     Pedido p;
     stringstream ss_id;
     ss_id << "P" << setw(5) << setfill('0') << contador_pedidos;
     p.id_pedido = ss_id.str();
-    contador_pedidos++;
+    contador_pedidos++
 
+    // Asigna un libro aleatorio del stock, una librería aleatoria, una cantidad de unidades,
     LibroStock libro_pedido = mi_stock.getLibroAleatorio();
     p.cod_libro = libro_pedido.cod_libro;
     p.materia = libro_pedido.materia;
 
+    //marca el pedido con el estado "Iniciado".
     p.id_editorial = rand() % LIBRERIAS;
     p.unidades = rand() % 20 + 1;
     p.estado = EstadoPedido::Iniciado;
@@ -313,6 +346,7 @@ Pedido generarPedidos(Stock& mi_stock) {
     return p;
 }
 
+// Ejecuta un paso de la simulación del sistema de pedidos, moviendo los pedidos entre las distintas fases:
 void ejecutarPasoDeSimulacion(Cola& qIniciado, Cola& qAlmacen, Cola& qImprenta, Cola& qListo, Pila cajas[], Stock& stock) {
 
     //FASE 4: de listo a caja
