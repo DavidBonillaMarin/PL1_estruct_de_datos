@@ -90,11 +90,9 @@ int main()
 
             cout << endl << "Ejecutando 4 pasos de simulacion..." << endl;
 
-            while (!cola_iniciado.es_vacia()){
-                Pedido p = cola_iniciado.desencolar();
-                int id_libreria = p.id_editorial;
-                p.estado = EstadoPedido::Caja;
-                cajas_librerias[id_libreria].apilar(p);
+            while (!cola_iniciado.es_vacia() || !cola_almacen.es_vacia() ||
+                   !cola_imprenta.es_vacia() || !cola_listo.es_vacia()) {
+                ejecutarPasoDeSimulacion(cola_iniciado, cola_almacen, cola_imprenta, cola_listo, cajas_librerias, mi_stock);
             }
 
             cout << "Paso ejecutado." << endl;

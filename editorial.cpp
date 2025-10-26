@@ -331,7 +331,7 @@ Pedido generarPedidos(Stock& mi_stock) {
     stringstream ss_id;
     ss_id << "P" << setw(5) << setfill('0') << contador_pedidos;
     p.id_pedido = ss_id.str();
-    contador_pedidos++
+    contador_pedidos++;
 
     // Asigna un libro aleatorio del stock, una librería aleatoria, una cantidad de unidades,
     LibroStock libro_pedido = mi_stock.getLibroAleatorio();
